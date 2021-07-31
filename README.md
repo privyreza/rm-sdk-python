@@ -1,1 +1,3 @@
-# rm-sdk-python
+# Resell Official Python API and Documentation
+
+## How to install
