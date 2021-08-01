@@ -2,10 +2,10 @@ import requests
 
 class Resellme:
 
-    hostname = 'https://api.resellme.co.zw/api/v1'
+    hostname = 'https://api.resellme.co.zw/api/v1' # shared by all instances
 
     def __init__(self, api_key=''):
-        """ Instantiate a Resellme object """
+        """ Resellme Object Instantiation """
 
         self.api_key = api_key
         self.domain_name = None
@@ -19,7 +19,7 @@ class Resellme:
     def search_domain(self, domain_name):
         """ Method to search a domain before registration """
 
-        self.domain_name = domain_name # sets the domain name
+        self.domain_name = str(domain_name).strip() # sets the domain name
         data = { "domain" : self.domain_name}
         with requests.Session() as s:
             try:
