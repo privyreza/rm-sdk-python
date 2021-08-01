@@ -1,6 +1,6 @@
 import requests, json
 
-proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
+# proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 
 
 
@@ -29,7 +29,7 @@ class Resellme:
 
             try:
                 req = sess.post(self.hostname + "searches",
-                                data=json.dumps(data),proxies=proxies, verify=False)
+                                data=json.dumps(data)) # ,proxies=proxies, verify=False
                 print(req)
             except Exception as e:
                 print(e)
