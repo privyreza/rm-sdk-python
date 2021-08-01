@@ -1,38 +1,31 @@
 import requests, json
 
-# proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
-
-
-
 class Resellme:
 
-    hostname = "https://api.resellme.co.zw/api/v1/"  # shared by all instances
+    hostname = 'http://127.0.0.1:8000/api/v1'
 
-    def __init__(self, api_key=""):
-        """ Resellme Object Instantiation """
+    def __init__(self, api_key=''):
+        """ Instantiate a Resellme object """
 
         self.api_key = api_key
-        self.headers = {
-            "Accept": "application/vnd.api+json",
-            "Content-Type": "application/vnd.api+json",
-            "Authorization": "Bearer {}".format(self.api_key),
-        }
+        self.domain_name = None
+        self.headers = {"Accept": "application/vnd.api+json",
+                          "Content-Type": "application/vnd.api+json",
+                          "Authorization": "Bearer {}".format(self.api_key)
+
+                        }
+
 
     def search_domain(self, domain_name):
         """ Method to search a domain before registration """
 
-        data = {"domain": domain_name}
-
-        with requests.Session() as sess:
-
-            sess.headers.update(self.headers)
-
-            try:
-                req = sess.post(self.hostname + "searches",
-                                data=json.dumps(data)) # ,proxies=proxies, verify=False
-                print(req)
-            except Exception as e:
-                print(e)
+        self.domain_name = domain_name # sets the domain name
+        data = { "domain" : self.domain_name}
+        try:
+            request = requests.post(self.hostname + "/searches", json.dumps(data), headers = self.headers)
+            print(request.json())
+        except Exception as e:
+            print(e)
 
 
     def register_domain(self, domain_name):
@@ -40,8 +33,7 @@ class Resellme:
         pass
 
 
-resellme = Resellme(
-    api_key="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3IiwianRpIjoiMzQ1OGUzMThjYTg1ODA2MzZiZDkxZDYwNWY0ZTMxN2RiNWI0MmE5OTA0ZTYzZTlhYjJkZGMxYTI5MmI1MjQ5OGE3MGEyMmQ1MmE2OWMyMmYiLCJpYXQiOjE2Mjc4MjI5MjYuNjk4ODMzLCJuYmYiOjE2Mjc4MjI5MjYuNjk4ODM2LCJleHAiOjE2NTkzNTg5MjYuNjkxNjA0LCJzdWIiOiIyOTUiLCJzY29wZXMiOltdfQ.e5MH1D_ovuKxqzNtJzxnNrIJ5mBMaechItu7YfNiczAz3nR_POWDWdSxPEwgN4YgscnmnEaPgKFrxM6qVS3lNU6DeZj8-gybVsx2VccbCzoINfss-7-Q661px7hoCE1D4aNX0OnyTOmVW8rp2Ut_6E26AsMa6Si59upsQRkZFiLe6sgesl42B3Dk74p3qFeIm0uu53THgbwLIYxBXWMLQzj0g_RPKzQQCMSClicZKa-6fa6k-sWV6zkLHkuTXKZ4hOK2xE4jrLwd6EAytJehZf_JKK6qwrVIW9tWun21pwxVChxyFcrfx8SxUD9Z6-XKDXp4lJAMAU7GukYRlYXWg1itruXuxkk2dk1r8tklxuiWYmf9PKmVaUinlu12ri_0d_JwJ-uixJdcICn1hR5RuJGGG7zebllXNnKQPAOhpxSvuqUqiJVfMBJmfpTKhU1xPXLE7hCRaWMntmshEOciszYdgqjjFCUJaJ7NE51TJdAqGTaQwTTeZylfvAU5bdjCAIbYaQDrJ7tWKniC8y6UjbOSkNzDiG3Xmv7p7b8T7pKOvAdWcin5AFZacMkiaubY6_8qmR5GlDpTikLixuBVKZN7xrrBf14LpVGi588WtJTgnjcDFa1B2ZUUI2Tjarj-CwyvS6ZLzkXovIuYBDyP0xPls-gVR6q3l2gQTXANKZs"
-)
 
-resellme.search_domain('beven.co.zw')
+resellme = Resellme(api_key='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiYzdhZTkzOTQxZDViMWUyODVjMTBhOTdjZmJiOTI0ODU4ZmNhNmJlYjcwODdiNDdiN2U2MDUxMDU0N2YxNmVjNTNmNWQ0YTUzZjBjY2U5ODUiLCJpYXQiOjE2MjMzNDkwMDYuMTkzNjA3LCJuYmYiOjE2MjMzNDkwMDYuMTkzNjE3LCJleHAiOjE2NTQ4ODUwMDUuNDMzNjMsInN1YiI6IjMxIiwic2NvcGVzIjpbXX0.XKYBvp4YE50LWFq38g00xLLl8j0BD-l4IgUOXYtnjh2gqqQ7J8hHZSM01AB_6hQ-xrXze2zA6A1RY_fvSXJKBlls0zxdnv-uoUIWtoCQvSX08d3wWiO_-rin5989eqJwi78hrrqc9a0eHfte6nZhD4-eEVv6SzemJ7_5Tic5pcEL7-18-Up5v6_ow9awGvcr8TbrPEyAjp5d1RgOcALoWdg1jmU7Ji9XnPD4NRThHstxRXfQEaPMvRsFvEjPzCfSFNQdPv3KL2AHl53JDiG8XGD2TcEJv-SLiafSZsiReINNzOyTfI2M4j0Yleu17aMol9q5cwnTCoTfvQfd1co3KS3qHF40bcbLTcie5fwuAos2EtULdspzASeAWr4aDVNPchrymWq9MNf_l_cDOVBbXChll-0jPdhF1ncc_4fdaLZN4aj2Tosm36W_ntS0xz_bezugyk4rOLWu8ji9sX7XIs1dtsUKYO-GGq_tihj3CTQ-L1lSew32ST_-sRvX_MVUVmH_HAyjx31ibdypqzTqGSs9YSZ9VqsLpZ1UAUlZ6f5wmjZfl75ruVp1emZoPrhSPG8kfhGNMqXiyyU_Uv_Ow0bPHw89kRpTgw4Wh5wEy58LxWSkcFyAnt8kO05_o0zD5knJ6WKiq31ioVSAUUFoia5N_W7tFdNK_00TrfMKCB4')
+
+resellme.search_domain('name.co.zw')
