@@ -1,3 +1,9 @@
-# Resell Official Python API and Documentation
+# Official Resellme Python SDK
 
-## How to install
+## Installation Guide
+
+```python
+
+pip install resellme
+
+```
