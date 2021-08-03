@@ -24,5 +24,5 @@ resellme = Resellme(api_key='xyz')
 
 ```python
 
-resellme.search_domain('xyz.co.zw')
+json_response = resellme.search_domain('xyz.co.zw')
 ```
