@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+setup.py
+src/resellme/__init__.py
+src/resellme.egg-info/PKG-INFO
+src/resellme.egg-info/SOURCES.txt
+src/resellme.egg-info/dependency_links.txt
+src/resellme.egg-info/requires.txt
+src/resellme.egg-info/top_level.txt

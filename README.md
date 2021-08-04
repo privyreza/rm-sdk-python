@@ -4,25 +4,37 @@
 
 ```python
 
-pip install resellme
+
+pip3 install resellme
+
 
 ```
 
-#  Create resellme instance
+#  Create a Resellme instance
+
 
 ```python
+
 
 from resellme import Resellme
 
 
-resellme = Resellme(api_key='xyz')
+
+# Create resellme object with API Token from Resellme
+
+resellme = Resellme(api_key='Your API Token')
 
 
-```
 
-# Search a Domain
-
-```python
+# Searching a Domain
 
 json_response = resellme.search_domain('xyz.co.zw')
+
+
+# Handle json response data contained in json_response
+
+
+
+
 ```
+
