@@ -1,0 +1,58 @@
+Metadata-Version: 2.1
+Name: resellme
+Version: 1.0.5
+Summary: The Official Resellme Python SDK .
+Home-page: https://github.com/bevennyamande/rm-sdk-python/
+Author: Beven Nyamande
+Author-email: bevenfx@gmail.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/pypa/resellme/issues
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# Official Resellme Python SDK
+
+## Installation Guide
+
+```python
+
+
+pip3 install resellme
+
+
+```
+
+#  Create a Resellme instance
+
+
+```python
+
+
+from resellme import Resellme
+
+
+
+# Create resellme object with API Token from Resellme
+
+resellme = Resellme(api_key='Your API Token')
+
+
+
+# Searching a Domain
+
+json_response = resellme.search_domain('xyz.co.zw')
+
+
+# Handle json response data contained in json_response
+
+
+
+
+```
+
+
+
