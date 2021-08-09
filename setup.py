@@ -2,8 +2,8 @@
 import setuptools
 
 setuptools.setup(
-    name="resellme",
-    version="1.0.5",
+    name="rm_sdk_python",
+    version="1.0.1",
     description="The Official Resellme Python SDK .",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
