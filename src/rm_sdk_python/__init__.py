@@ -1,7 +1,4 @@
-import json
-import logging
-
-import requests
+import json, logging, requests
 
 
 class Resellme:
@@ -9,6 +6,8 @@ class Resellme:
     log = logging.getLogger(__name__)
 
     API_ENDPOINT = "https://api.resellme.co.zw/api/v1"
+    NAME_SERVER1 = "ns1.cloud-dns.com"  # default resellme nameserver 1
+    NAME_SERVER2 = "ns2.cloud-dns.com"  # default resellme nameserver 2
 
     def __init__(self, api_key=""):
         """ Instantiate a Resellme object """
@@ -32,7 +31,9 @@ class Resellme:
         data = {"domain": domain_name}
         try:
             request = requests.post(
-                self.API_ENDPOINT + "/searches", data=json.dumps(data), headers=self.headers
+                self.API_ENDPOINT + "/searches",
+                data=json.dumps(data),
+                headers=self.headers,
             )
             return request.json()
         except requests.exceptions.HTTPError as http_error:
@@ -48,6 +49,106 @@ class Resellme:
             self.log.error("Something went wrong:", err)
             raise err
 
-    def register_domain(self):
+    def register_domain(
+        self,
+        domain_name="",
+        first_name="",
+        last_name="",
+        email="",
+        company="",
+        mobile="",
+        street_address="",
+        core_business="",
+        city="",
+        country="",
+        name_server1=None,
+        name_server2=None,
+    ):
+
         """ Method to register a /domains + domain id + /register """
-        print(self.domain_name)
+
+        # TODO: Check user nameservers
+
+        if (name_server1 == None) and (name_server2 == None):
+            name_server1 = self.NAME_SERVER1
+            name_server2 = self.NAME_SERVER2
+
+        nameservers = {"ns1": name_server1, "ns2": name_server2}
+
+        # first lets search if the domain is available
+
+        if (
+            domain_name
+            and first_name
+            and last_name
+            and email
+            and company
+            and mobile
+            and street_address
+            and core_business
+            and city
+            and country
+        ):
+            results = self.search_domain(domain_name)
+
+            # TODO: check with server of valid responses
+
+            if results["status"] == "pending":
+
+                domain_id = results.get(
+                    "id", None
+                )  # TODO: way to check if its none may throw error
+
+                contacts = {
+                    "registrant": {
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "email": email,
+                        "company": company,
+                        "mobile": mobile,
+                        "street_address": street_address,
+                        "core_business": core_business,
+                        "city": city,
+                        "country": country,
+                        "domain_id": domain_id,  # get from search
+                    }
+                }
+
+                data = {
+                    "domain": domain_name,
+                    "nameservers": nameservers,
+                    "contacts": contacts,
+                }
+                try:
+
+                    print(json.dumps(data))
+
+                    resp = requests.post(
+                        self.API_ENDPOINT + "/domains/{}/register".format(domain_id),
+                        data=json.dumps(data),
+                        headers=self.headers,
+                    )
+                    return resp.json()
+                except Exception as e:
+                    self.log.error("Something went wrong:", e)
+            else:
+                raise ValueError("The domain {} is not available ".format(domain_name))
+
+        def get_domain(self):
+            pass
+
+
+# resellme = Resellme(api_key='')
+# print(resellme.search_domain('xyz.co.zw'))
+# print(resellme.register_domain(
+#     domain_name='xbc.co.zw',
+#     first_name='test1',
+#     last_name='test1',
+#     email='test1@test1.com',
+#     company='test1',
+#     mobile='0777054115',
+#     street_address='test1',
+#     core_business='test1',
+#     city='Harare',
+#     country='Zimbabwe',
+# ))
