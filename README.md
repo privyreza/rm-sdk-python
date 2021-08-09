@@ -5,7 +5,7 @@
 ```python
 
 
-pip3 install resellme
+pip3 install rm_sdk_python
 
 
 ```
@@ -16,7 +16,7 @@ pip3 install resellme
 ```python
 
 
-from resellme import Resellme
+from rm_sdk_python import Resellme
 
 
 

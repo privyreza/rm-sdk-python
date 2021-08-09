@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
-Name: resellme
-Version: 1.0.5
+Name: rm-sdk-python
+Version: 1.0.1
 Summary: The Official Resellme Python SDK .
 Home-page: https://github.com/bevennyamande/rm-sdk-python/
 Author: Beven Nyamande
@@ -21,7 +21,7 @@ Description-Content-Type: text/markdown
 ```python
 
 
-pip3 install resellme
+pip3 install rm_sdk_python
 
 
 ```
@@ -32,7 +32,7 @@ pip3 install resellme
 ```python
 
 
-from resellme import Resellme
+from rm_sdk_python import Resellme
 
 
 
