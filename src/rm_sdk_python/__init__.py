@@ -1,13 +1,18 @@
 import json, logging, requests
+import jsonapi_requests
 
+# proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 
 class Resellme:
     logging.basicConfig(level=logging.DEBUG)
     log = logging.getLogger(__name__)
 
     API_ENDPOINT = "https://api.resellme.co.zw/api/v1"
-    NAME_SERVER1 = "ns1.cloud-dns.com"  # default resellme nameserver 1
-    NAME_SERVER2 = "ns2.cloud-dns.com"  # default resellme nameserver 2
+    NAME_SERVER1 = "cloud-ns1.pnrhost.com"  # default resellme nameserver 1
+    NAME_SERVER2 = "cloud-ns2.pnrhost.com"  # default resellme nameserver 2
+    domain_id = ""  # domain id
+    domain = ""  # domain name
+    status = ""  # domain name
 
     def __init__(self, api_key=""):
         """ Instantiate a Resellme object """
@@ -22,133 +27,157 @@ class Resellme:
             "Authorization": "Bearer {}".format(self.api_key),
         }
 
-    def search_domain(self, domain_name):
+    def search_domain(self, domain):
         """ Method to search a domain before registration """
 
-        if not bool(domain_name and not domain_name.isspace()):
+        if not bool(domain and not domain.isspace()):
             raise ValueError("domain name cannot be empty")
 
-        data = {"domain": domain_name}
+        # TODO: Sanitize URL from users
+        self.domain = domain
+
+ 
+        data = {"domain": self.domain}
         try:
             request = requests.post(
                 self.API_ENDPOINT + "/searches",
                 data=json.dumps(data),
                 headers=self.headers,
+                # proxies=proxies,
+                # verify=False,
             )
+            self.domain_id = request.json()["id"]
+            self.status = request.json()["status"]
             return request.json()
-        except requests.exceptions.HTTPError as http_error:
-            self.log.error("Http Error:", http_error)
-            raise http_error
-        except requests.exceptions.ConnectionError as conn_error:
-            self.log.error("Error Connecting:", conn_error)
-            raise conn_error
-        except requests.exceptions.Timeout as timeout_error:
-            self.log.error("Timeout Error:", timeout_error)
-            raise timeout_error
-        except requests.exceptions.RequestException as err:
-            self.log.error("Something went wrong:", err)
-            raise err
+        except Exception as e:
+            self.log.error("Error Occurred: {}".format(e))
+
+    def createNS(self, data):
+
+        try:
+            resp = requests.post(
+                self.API_ENDPOINT + "/nameservers/",
+                data=json.dumps(data),
+                headers=self.headers,
+                # proxies=proxies,
+                # verify=False,
+            )
+            return resp.json()
+        except Exception as e:
+            self.log.error("Error Occurred: {}".format(e))
+
+    def create_contact(self, data):
+        try:
+            resp = requests.post(
+                self.API_ENDPOINT + "/contacts/",
+                data=json.dumps(data),
+                headers=self.headers,
+                # proxies=proxies,
+                # verify=False,
+            )
+            return resp.json()
+        except Exception as e:
+            self.log.error("Error Occurred: {}".format(e))
 
     def register_domain(
         self,
-        domain_name="",
-        first_name="",
-        last_name="",
-        email="",
-        company="",
-        mobile="",
-        street_address="",
-        core_business="",
-        city="",
-        country="",
-        name_server1=None,
-        name_server2=None,
+        first_name='',
+        last_name='',
+        email='',
+        company='',
+        mobile='',
+        street_address='',
+        core_business='',
+        city='',
+        country='',
+        ns1=None,
+        ns2=None,
     ):
 
-        """ Method to register a /domains + domain id + /register """
+        """ Method to register a domain at this endpoint /domains + domain id + /register """
 
-        # TODO: Check user nameservers
+        if ns1 and ns2:
+            self.NAME_SERVER1 = ns1
+            self.NAME_SERVER2 = ns2
+        if self.status == 'pending':
 
-        if (name_server1 == None) and (name_server2 == None):
-            name_server1 = self.NAME_SERVER1
-            name_server2 = self.NAME_SERVER2
-
-        nameservers = {"ns1": name_server1, "ns2": name_server2}
-
-        # first lets search if the domain is available
-
-        if (
-            domain_name
-            and first_name
-            and last_name
-            and email
-            and company
-            and mobile
-            and street_address
-            and core_business
-            and city
-            and country
-        ):
-            results = self.search_domain(domain_name)
-
-            # TODO: check with server of valid responses
-
-            if results["status"] == "pending":
-
-                domain_id = results.get(
-                    "id", None
-                )  # TODO: way to check if its none may throw error
-
-                contacts = {
-                    "registrant": {
-                        "first_name": first_name,
-                        "last_name": last_name,
-                        "email": email,
-                        "company": company,
-                        "mobile": mobile,
-                        "street_address": street_address,
-                        "core_business": core_business,
-                        "city": city,
-                        "country": country,
-                        "domain_id": domain_id,  # get from search
-                    }
+            nameservers = {
+                "data": {
+                    "type": "nameservers",
+                    "attributes": {
+                        "ns1": self.NAME_SERVER1,
+                        "ns2": self.NAME_SERVER2,
+                        "domain_id": self.domain_id,
+                    },
                 }
+            }
 
-                data = {
-                    "domain": domain_name,
-                    "nameservers": nameservers,
-                    "contacts": contacts,
+            contacts = {
+                "data": {
+                    "type": "contacts",
+                    "attributes": {
+                        "registrant": {
+                            "first_name": first_name,
+                            "last_name": last_name,
+                            "email": email,
+                            "company": company,
+                            "mobile": mobile,
+                            "street_address": street_address,
+                            "core_business": core_business,
+                            "city": city,
+                            "country": country,
+                            "domain_id": self.domain_id,
+                        }
+                    },
                 }
-                try:
+            }
 
-                    print(json.dumps(data))
+            self.createNS(nameservers)
+            self.create_contact(contacts)
 
-                    resp = requests.post(
-                        self.API_ENDPOINT + "/domains/{}/register".format(domain_id),
-                        data=json.dumps(data),
-                        headers=self.headers,
-                    )
-                    return resp.json()
-                except Exception as e:
-                    self.log.error("Something went wrong:", e)
-            else:
-                raise ValueError("The domain {} is not available ".format(domain_name))
-
-        def get_domain(self):
-            pass
+            data = {
+                "data": {
+                    "type": "data",
+                    "attributes": {
+                        "domain": self.domain_id,
+                        "nameservers": nameservers,
+                        "contacts": contacts,
+                    },
+                }
+            }
 
 
-# resellme = Resellme(api_key='')
-# print(resellme.search_domain('xyz.co.zw'))
-# print(resellme.register_domain(
-#     domain_name='xbc.co.zw',
-#     first_name='test1',
-#     last_name='test1',
-#     email='test1@test1.com',
-#     company='test1',
-#     mobile='0777054115',
-#     street_address='test1',
-#     core_business='test1',
-#     city='Harare',
-#     country='Zimbabwe',
-# ))
+
+            try:
+                resp = requests.post(
+                    self.API_ENDPOINT + "/domains/" + str(self.domain_id) + "/register",
+                    data=json.dumps(data),
+                    headers=self.headers,
+                    # proxies=proxies,
+                    # verify=False,
+                )
+                return resp.json()
+            except Exception as e:
+                self.log.error("Error Occurred: {}".format(e))
+        else:
+            raise ValueError('Domain not available')
+
+
+# resellme = Resellme(
+#     api_key=""
+# )
+# print(resellme.search_domain("omg123456.co.zw"))
+
+# print(
+#     resellme.register_domain(
+#         first_name='tested',
+#         last_name='tested',
+#         email='tested',
+#         company='tested',
+#         mobile='tested',
+#         street_address='tested',
+#         core_business='tested',
+#         city='tested',
+#         country='tested',
+#     )
+# )
