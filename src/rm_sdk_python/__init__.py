@@ -115,18 +115,16 @@ class Resellme:
                 "data": {
                     "type": "contacts",
                     "attributes": {
-                        "registrant": {
-                            "first_name": first_name,
-                            "last_name": last_name,
-                            "email": email,
-                            "company": company,
-                            "mobile": mobile,
-                            "street_address": street_address,
-                            "core_business": core_business,
-                            "city": city,
-                            "country": country,
-                            "domain_id": self.domain_id,
-                        }
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "email": email,
+                        "company": company,
+                        "mobile": mobile,
+                        "street_address": street_address,
+                        "core_business": core_business,
+                        "city": city,
+                        "country": country,
+                        "domain_id": self.domain_id,
                     },
                 }
             }
