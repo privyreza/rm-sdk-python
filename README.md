@@ -28,10 +28,23 @@ resellme = Resellme(api_key='Your API Token')
 
 # Searching a Domain
 
-json_response = resellme.search_domain('xyz.co.zw')
+search = resellme.search_domain('xyz.co.zw')
 
+# Domain registration Process
+# NB: Nameservers default to Resellme Name servers
 
-# Handle json response data contained in json_response
+resellme.register_domain(
+    domain_name='xbc.co.zw',
+    first_name='test1',
+    last_name='test1',
+    email='test1@test1.com',
+    company='test1',
+    mobile='0777054115',
+    street_address='test1',
+    core_business='test1',
+    city='Harare',
+    country='Zimbabwe',
+)
 
 
 
