@@ -1,37 +1,47 @@
 # Official Resellme Python SDK
 
+
 ## Installation Guide
 
 ```python
 
-
 pip3 install rm_sdk_python
-
 
 ```
 
-#  Create a Resellme instance
+#  Import the Resellme module to your project
 
 
 ```python
 
-
 from rm_sdk_python import Resellme
 
+```
 
+# Create resellme object with the API Token from Resellme
 
-# Create resellme object with API Token from Resellme
+```python
 
 resellme = Resellme(api_key='Your API Token')
+```
 
 
+# Searching for a domain
 
-# Searching a Domain
+```python
 
-search = resellme.search_domain('xyz.co.zw')
+search_response = resellme.search_domain('xyz.co.zw')
 
-# Domain registration Process
-# NB: Nameservers default to Resellme Name servers
+# search_response is a json object
+
+if search_response['status'] == 'pending':
+    pass
+```
+
+# Registering a domain
+
+```python
+# A contact is created with the details provided upon registering a domain
 
 resellme.register_domain(
     domain_name='xbc.co.zw',
@@ -45,9 +55,6 @@ resellme.register_domain(
     city='Harare',
     country='Zimbabwe',
 )
-
-
-
 
 ```
 
