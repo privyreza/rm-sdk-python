@@ -2,8 +2,7 @@ import responses
 
 from resellme import Resellme
 
-API_ENDPOINT = "https://api.resellme.co.zw/api/v1"
-
+API_ENDPOINT = "https://api.resellme.co.zw/api/"
 
 MOCK_RESPONSE = {
     "name": "test.co.zw",
