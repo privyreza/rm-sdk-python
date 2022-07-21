@@ -184,9 +184,6 @@ class Resellme:
         """
         url = self.API_ENDPOINT + "v2/contacts/"
 
-        if not bool(domain_id and not domain_id.isspace()):
-            raise ValueError("domain_id cannot be empty")
-
         payload = json.dumps(
             {
                 "domain_id": domain_id,
@@ -339,5 +336,3 @@ class Resellme:
         except Exception as e:
             raise e
         return response.json()
-
-

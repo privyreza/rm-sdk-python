@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="rm_sdk_python",
-    version="1.0.0",
+    version="1.0.4",
     description="The Official Resellme Python SDK .",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -11,7 +11,7 @@ setuptools.setup(
     author_email="bevenfx@gmail.com",
     url="https://github.com/bevennyamande/rm-sdk-python/",
     project_urls={
-        "Homepage" = "https://github.com/bevennyamande/rm-sdk-python/"
+        "Homepage" : "https://github.com/bevennyamande/rm-sdk-python/",
         "Bug Tracker": "https://github.com/bevennyamande/rm-sdk-python/issues",
     },
     install_requires=[
