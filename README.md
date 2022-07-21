@@ -22,7 +22,7 @@ pip3 install rm_sdk_python
 from rm_sdk_python import Resellme
 
 
-resellme = Resellme(api_key='Your API Token')
+resellme = Resellme(api_key='YOUR_RESELLME_API_KEY_TOKEN')
 ```
 
 
@@ -31,11 +31,9 @@ resellme = Resellme(api_key='Your API Token')
 - The `resellme.search_domain` method can return a json object with the values such as `available` or `not_available`
 
 ```python
-
 search_response = resellme.search_domain('xyz.co.zw')
 
 # search_response is a json object
-
 if search_response['status'] == 'available':
     # do registration etc
 ```
@@ -59,7 +57,6 @@ response = resellme.register_domain(
     city='Harare',
     country='Zimbabwe',
 )
-
 ```
 
 ## Updating nameservers
@@ -73,9 +70,19 @@ response = resellme.update_nameserver('test8.co.zw',ns1='ns1.xyz.com', ns2='ns2.
 
 ## Updating Contact details
 - To update the `email, mobile, city` details for a specified domain use the following method
+- The following method illustrates a case were you want to update all the fields, however you can choose any specific field
+- NB: the method requires the domain and email as positional arguments
 
 ```python
-contact_details = resellme.update_contact('test.co.zw', email='beven@crontab.co.zw', mobile='123123123', city='Harare')
+updated_contact_details = resellme.update_contact('test.co.zw', email='beven@crontab.co.zw',
+                                           first_name='your name',
+                                           last_name='your surname',
+                                           company='Xyz Inc',
+                                           mobile='0777123123',
+                                           street_address='Xyz Street',
+                                           core_business='Vending',
+                                           city='Harare',
+                                           country='Zimbabwe')
 
 ```
 
@@ -83,6 +90,6 @@ contact_details = resellme.update_contact('test.co.zw', email='beven@crontab.co.
 - You can use this method to fetch all your domains
 
 ```python
-domains = resellme.get_my_domains()
+domains = resellme.get_all_domains()
 
 ```

@@ -146,7 +146,7 @@ class Resellme:
             raise e
         return response.json()
 
-    def get_my_domains(self):
+    def get_all_domains(self):
         '''
         Returns all the doamins for the specified reseller
         '''
@@ -182,8 +182,10 @@ class Resellme:
         """
         Creates the contact details of the registering domain owner
         """
-
         url = self.API_ENDPOINT + "v2/contacts/"
+
+        if not bool(domain_id and not domain_id.isspace()):
+            raise ValueError("domain_id cannot be empty")
 
         payload = json.dumps(
             {
@@ -207,14 +209,56 @@ class Resellme:
         return response.json()
 
 
-    def update_contact(self, domain, email=None, mobile=None, city=None):
+    def get_contact(self, contact_id):
+        url = self.API_ENDPOINT + f"v1/contacts/{contact_id}"
+
+        if not bool(contact_id and not contact_id.isspace()):
+            raise ValueError("contact_id name cannot be empty")
+
+        payload={}
+        try:
+            response = requests.request("GET", url, headers=self.headers, data=payload)
+        except Exception as e:
+            raise e
+        return response.json()
+
+
+    def update_contact(self, domain, email,first_name=None, 
+                       last_name=None,
+                       company=None,
+                       mobile=None,
+                       street_address=None,
+                       core_business=None,
+                       city=None,
+                       country=None,
+                       ):
         """
         Updates the contact details for the specified domain
         """
+
         contact_id =self.get_domain_by_name(domain)['data'][0]['relationships']['contact']['data']['id']
+        old_contact_details = self.get_contact(contact_id)['data']['attributes']
+
+        if not first_name:
+            first_name = old_contact_details['first_name']
+        if not last_name:
+            last_name = old_contact_details['last_name']
+        if not company:
+            company = old_contact_details['company']
+        if not mobile:
+            mobile = old_contact_details['mobile']
+        if not street_address:
+            street_address = old_contact_details['street_address']
+        if not core_business:
+            core_business = old_contact_details['core_business']
+        if not city:
+            city = old_contact_details['city']
+        if not country:
+            country = old_contact_details['country']
+
+
 
         url = self.API_ENDPOINT + f"v1/contacts/{contact_id}"
-
 
         payload = json.dumps({
           "data": {
@@ -222,14 +266,14 @@ class Resellme:
             "id": contact_id,
             "attributes": {
               "email": email,
-              # "first_name": first_name,
-              # "last_name": last_name,
-              # "company": company,
+              "first_name": first_name,
+              "last_name": last_name,
+              "company": company,
               "mobile": mobile,
-              # "street_address": street_address,
-              # "core_business": core_business,
+              "street_address": street_address,
+              "core_business": core_business,
               "city": city,
-              # "country": country,
+              "country": country,
             }
           }
         })
@@ -295,4 +339,5 @@ class Resellme:
         except Exception as e:
             raise e
         return response.json()
+
 
