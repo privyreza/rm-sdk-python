@@ -4,6 +4,7 @@ class Resellme:
     logging.basicConfig(level=logging.DEBUG)
     log = logging.getLogger(__name__)
 
+    # Class Attributes
     API_ENDPOINT = "https://api.resellme.co.zw/api/"
     NAME_SERVER1 = "ns1.pnrhost.com"  # default resellme nameserver 1
     NAME_SERVER2 = "ns2.pnrhost.com"  # default resellme nameserver 2
@@ -13,7 +14,7 @@ class Resellme:
         """
         Instantiate a new Resellme object with the api_key provided
         """
-
+        assert type(api_key) == str, f'{api_key} must be a string value'
         if not bool(api_key and not api_key.isspace()):
             raise ValueError("API Key cannot be empty")
 
@@ -81,6 +82,20 @@ class Resellme:
         country,
     ):
 
+        # Run validation checks
+        assert type(domain_name) == str, f'{domain_name} must be a string'
+        assert type(email) == str, f'{email} must be a string'
+        assert type(first_name) == str, f'{first_name} must be a string'
+        assert type(last_name) == str, f'{last_name} must be a string'
+        assert type(company) == str, f'{company} must be a string'
+        assert type(mobile) == str, f'{mobile} must be a string'
+        assert type(street_address) == str, f'{street_address} must be a string'
+        assert type(core_business) == str, f'{core_business} must be a string'
+        assert type(city) == str, f'{city} must be a string'
+        assert type(country) == str, f'{country} must be a string'
+
+
+        # Assign to self object
         self.domain_name = domain_name
         self.email = email
         self.first_name = first_name
@@ -316,6 +331,11 @@ class Resellme:
         """
 
         # get the ID of the nameserver specific to the domain
+
+        assert type(domain) == str, f'{domain} should be a string'
+        assert type(ns1) == str, f'{ns1} should be a string'
+        assert type(ns2) == str, f'{ns2} should be a string'
+
         nameserver_id =self.get_domain_by_name(domain)['data'][0]['relationships']['nameserver']['data']['id']
         url = self.API_ENDPOINT + f"v1/nameservers/{nameserver_id}"
 
