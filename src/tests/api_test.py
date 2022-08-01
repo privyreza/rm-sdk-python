@@ -2,7 +2,7 @@ import responses
 
 from resellme import Resellme
 
-API_ENDPOINT = "https://api.resellme.co.zw/api/v1"
+API_ENDPOINT = "https://api.resellme.co.zw/api/"
 
 MOCK_RESPONSE = {
     "name": "test.co.zw",
@@ -20,7 +20,7 @@ def test_api_call_200():
         responses.POST, f"{API_ENDPOINT}/searches", json=MOCK_RESPONSE, status=200
     )
 
-    resellme = Resellme(api_key="MOCK_API")
+    resellme = Resellme(api_key=MOCK_API)
     json_response = resellme.search_domain("xyz.co.zw")
 
     assert json_response["status"] == "pending"
